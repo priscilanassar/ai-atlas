@@ -1,0 +1,47 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Collection — AI ATLAS</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/collection.css' %}">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<main class="form-page">
+    <div class="form-card">
+        <span>CREATIVE COLLECTIONS / NEW</span>
+
+        <h1>NEW COLLECTION</h1>
+
+        <p>Start building your own visual universe.</p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>COLLECTION NAME</label>
+            {{ form.title }}
+            {{ form.title.errors }}
+
+            <label>DESCRIPTION</label>
+            {{ form.description }}
+            {{ form.description.errors }}
+
+            <label>COVER IMAGE URL</label>
+            {{ form.cover_image }}
+            {{ form.cover_image.errors }}
+
+            <button type="submit">CREATE COLLECTION ↗</button>
+        </form>
+
+        <a href="{% url 'my_collections' %}">← BACK TO MY COLLECTIONS</a>
+    </div>
+</main>
+
+</body>
+</html>

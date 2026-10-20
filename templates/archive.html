@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Archive — AI ATLAS</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/archive.css' %}">
+</head>
+
+<body>
+
+    {% include 'navbar.html' %}
+
+    <section class="hero">
+        <span>INDEX / 001 — VISUAL CULTURE</span>
+        <h1>VISUAL<br>ARCHIVE</h1>
+        <p>A curated index of artificial imagination,
+            creative technologies and visual culture.</p>
+    </section>
+
+    <main>
+        <form method="GET" class="filters">
+            <input type="text" name="search" placeholder="SEARCH PROJECTS..." value="{{ search }}">
+
+            <select name="category">
+                <option value="">ALL CATEGORIES</option>
+                <option value="AI" {% if category == 'AI' %}selected{% endif %}>AI ART</option>
+                <option value="CGI" {% if category == 'CGI' %}selected{% endif %}>CGI / 3D</option>
+                <option value="FASHION" {% if category == 'FASHION' %}selected{% endif %}>DIGITAL FASHION</option>
+                <option value="FILM" {% if category == 'FILM' %}selected{% endif %}>AI FILM</option>
+                <option value="DESIGN" {% if category == 'DESIGN' %}selected{% endif %}>GRAPHIC DESIGN</option>
+            </select>
+
+            <button type="submit">FILTER ↗</button>
+        </form>
+
+        <div class="project-grid">
+            {% for project in projects %}
+
+            {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'save_project' project.id %}" class="save-form">
+
+                {% csrf_token %}
+
+                <select name="collection_id" required>
+                    <option value="">SAVE TO COLLECTION...</option>
+
+                    {% for col in user.creative_collections.all %}
+                    <option value="{{ col.id }}">
+                        {{ col.title }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">SAVE +</button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}?next={% url 'archive' %}">
+                LOGIN TO SAVE +
+            </a>
+            {% endif %}
+
+            <article class="project-card">
+                <div class="project-image">
+                    {% if project.image %}
+                    <img src="{{ project.image }}" alt="{{ project.title }}" loading="lazy">
+                    {% endif %}
+                </div>
+                <div class="project-info">
+                    <h2>{{ project.title }}</h2>
+                    <span>{{ project.get_category_display }}</span>
+                </div>
+                <p>{{ project.artist }} — {{ project.year }}</p>
+            </article>
+            {% empty %}
+            <p>No projects found. Add your first project in the admin panel.</p>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer>
+        <span>AI ATLAS © 2026</span>
+        <span>AN INDEPENDENT VISUAL ARCHIVE</span>
+    </footer>
+
+</body>
+
+</html>

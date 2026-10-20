@@ -1,0 +1,61 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Collections — AI ATLAS</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/collection.css' %}">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<section class="hero">
+    <span>PERSONAL ARCHIVE / {{ user.username }}</span>
+    <h1>MY<br>COLLECTIONS</h1>
+    <p>Your personal space for creative research.</p>
+
+    <a href="{% url 'create_collection' %}" class="create-btn">
+        + NEW COLLECTION
+    </a>
+</section>
+
+<main>
+    <div class="section-header">
+        <h2>YOUR COLLECTIONS</h2>
+        <span>{{ collections.count }} COLLECTIONS</span>
+    </div>
+
+    <div class="collection-grid">
+        {% for collection in collections %}
+        <a href="{% url 'collection_detail' collection.pk %}"
+           class="collection-card">
+
+            <div class="collection-image">
+                {% if collection.cover_image %}
+                <img src="{{ collection.cover_image }}"
+                     alt="{{ collection.title }}">
+                {% else %}
+                <span class="placeholder">AI ATLAS®</span>
+                {% endif %}
+            </div>
+
+            <div class="collection-info">
+                <h3>{{ collection.title }}</h3>
+                <span>↗</span>
+            </div>
+
+            <p>{{ collection.description|truncatewords:15 }}</p>
+            <small>{{ collection.projects.count }} PROJECTS</small>
+        </a>
+        {% empty %}
+        <p>You haven't created any collections yet.</p>
+        {% endfor %}
+    </div>
+</main>
+
+</body>
+</html>

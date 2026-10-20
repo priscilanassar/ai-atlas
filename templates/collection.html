@@ -1,0 +1,65 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Collections — AI ATLAS</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/collection.css' %}">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+
+<section class="hero">
+    <span>INDEX / 002 — PERSONAL ARCHIVE</span>
+    <h1>CREATIVE<br>COLLECTIONS</h1>
+    <p>Collect ideas. Connect aesthetics.<br>
+       Build your own visual universe.</p>
+</section>
+
+<main>
+    <div class="section-header">
+        <h2>EXPLORE COLLECTIONS</h2>
+        <span>{{ collections.count }} COLLECTIONS</span>
+    </div>
+
+    <div class="collection-grid">
+        {% for collection in collections %}
+        <a href="{% url 'collection_detail' collection.pk %}"
+           class="collection-card">
+
+            <div class="collection-image">
+                {% if collection.cover_image %}
+                <img src="{{ collection.cover_image }}"
+                     alt="{{ collection.title }}"
+                     loading="lazy">
+                {% else %}
+                <span class="placeholder">AI ATLAS®</span>
+                {% endif %}
+            </div>
+
+            <div class="collection-info">
+                <h3>{{ collection.title }}</h3>
+                <span>↗</span>
+            </div>
+
+            <p>{{ collection.description|truncatewords:12 }}</p>
+            <small>{{ collection.projects.count }} PROJECTS</small>
+        </a>
+        {% empty %}
+        <p>No collections yet. Create your first one in the admin panel.</p>
+        {% endfor %}
+    </div>
+</main>
+
+<footer>
+    <span>AI ATLAS © 2026</span>
+    <span>AN INDEPENDENT CREATIVE ARCHIVE</span>
+</footer>
+
+</body>
+</html>

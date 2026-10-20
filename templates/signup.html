@@ -1,0 +1,31 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up — AI ATLAS</title>
+    <link rel="stylesheet" href="{% static 'css/collection.css' %}">
+</head>
+<body>
+{% include 'navbar.html' %}
+
+<main class="form-page">
+    <div class="form-card">
+        <span>JOIN THE ATLAS / 001</span>
+        <h1>CREATE ACCOUNT</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">SIGN UP ↗</button>
+        </form>
+
+        <p>Already a member?
+            <a href="{% url 'login' %}">Log in</a>
+        </p>
+    </div>
+</main>
+</body>
+</html>

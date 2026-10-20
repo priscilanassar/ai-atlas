@@ -1,0 +1,57 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ collection.title }} — AI ATLAS</title>
+
+    <link rel="stylesheet" href="{% static 'css/collection.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+
+<section class="hero">
+    <span>COLLECTION / {{ collection.pk }}</span>
+    <h1 class="detail-title">{{ collection.title }}</h1>
+    <p>{{ collection.description }}</p>
+    <span>CURATED BY {{ collection.owner.username }}</span>
+</section>
+
+<main>
+    <div class="section-header">
+        <h2>COLLECTED PROJECTS</h2>
+        <span>{{ projects.count }} PROJECTS</span>
+    </div>
+
+    <div class="collection-grid">
+        {% for project in projects %}
+        <article class="collection-card">
+            <div class="collection-image">
+                {% if project.image %}
+                <img src="{{ project.image }}"
+                     alt="{{ project.title }}"
+                     loading="lazy">
+                {% endif %}
+            </div>
+            <div class="collection-info">
+                <h3>{{ project.title }}</h3>
+            </div>
+            <p>{{ project.artist }} — {{ project.year }}</p>
+        </article>
+        {% empty %}
+        <p>No projects in this collection yet.</p>
+        {% endfor %}
+    </div>
+</main>
+
+<footer>
+    <span>AI ATLAS © 2026</span>
+    <a href="{% url 'collection' %}">← ALL COLLECTIONS</a>
+</footer>
+
+</body>
+</html>
