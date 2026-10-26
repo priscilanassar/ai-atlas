@@ -1,0 +1,29 @@
+# Local environments and generated Python files
+.venv/
+.tools/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Credentials and local databases; migrate data separately
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.sqlite3
+*.sqlite3-*
+
+# Store public media in R2; do not bundle it into Worker code
+media/
+staticfiles/
+reports/
+.wrangler/
+node_modules/
+
+# Local research exports and contact sheets; retain curation scripts/docs
+curation/*.json
+curation/*.csv
+curation/*.tsv
+curation/*.jpg
+curation/*.png

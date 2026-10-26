@@ -20,11 +20,21 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import home
 from archive.views import archive
+from .admin import atlas_admin
+from django.views.generic import RedirectView
+from django.conf import settings
+from django.conf.urls.static import static
+from archive.views import project_detail, project_delete, projects_bulk_delete
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', atlas_admin.urls),
     path('', home, name='home'),
-    path('archive/', archive, name='archive'),
+    path('projects/<int:pk>/', project_detail, name='project_detail'),
+    path('projects/<int:pk>/delete/', project_delete, name='project_delete'),
+    path('projects/delete-selected/', projects_bulk_delete, name='projects_bulk_delete'),
+    path('atlas/', RedirectView.as_view(pattern_name='home', query_string=True), name='atlas'),
+    path('archive/', RedirectView.as_view(pattern_name='home', query_string=True), name='archive'),
     path('collection/', include('collection.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,5 @@
+{% load static %}
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Delete collection — AI ATLAS</title><link rel="stylesheet" href="{% static 'css/navbar.css' %}"><link rel="stylesheet" href="{% static 'css/collection.css' %}"></head><body>
+{% include 'navbar.html' %}
+<main class="collection-delete-confirm"><span>YOUR PERSONAL ATLAS</span><h1>Delete this collection?</h1><h2>{{ collection.title }}</h2><p>This removes your collection and its saved links. The {{ collection.projects.count }} original project{{ collection.projects.count|pluralize }} will remain in the Atlas.</p><form method="post">{% csrf_token %}<button class="create-btn" type="submit">{% include 'trash_icon.html' %} DELETE COLLECTION</button><a href="{% url 'collection_detail' collection.pk %}">KEEP COLLECTION</a></form></main>
+</body></html>

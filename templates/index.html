@@ -1,21 +1,65 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ATLAS</title>
-
-    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI ATLAS — A Creative Atlas of AI</title>
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+<link rel="stylesheet" href="{% static 'css/home.css' %}?v=20261025-26">
+<link rel="stylesheet" href="{% static 'css/home_mobile.css' %}?v=20261026-2">
+<script src="{% static 'js/atlas_type.js' %}?v=20261025-23" defer></script>
+<script src="{% static 'js/orbit_geometry.js' %}?v=20261025-22" defer></script>
+<script src="{% static 'js/atlas_cluster_geometry.js' %}?v=20261026-1" defer></script>
+<script src="{% static 'js/atlas_maps.js' %}?v=20261026-6" defer></script>
+<script src="{% static 'js/home.js' %}?v=20261026-7" defer></script>
+<link rel="stylesheet" href="{% static 'css/atlas_maps.css' %}?v=20261026-6">
+<script src="{% static 'js/project_selection.js' %}?v=20261025-20" defer></script>
+<script src="{% static 'js/project_videos.js' %}?v=20261026-7" defer></script>
 </head>
+<body data-view="globe">
+{% include 'navbar.html' %}
+<main class="atlas-home">
+<div class="home-heading"><span>AN ATLAS OF ARTIFICIAL IMAGINATION</span><span>INDEX / {{ project_count|stringformat:"03d" }} PROJECTS</span></div>
+<section class="globe-stage" aria-labelledby="home-title">
+<div class="home-copy"><h1 id="home-title">A CREATIVE<br>{% include 'atlas_type.html' %} OF AI</h1><p>A world of art, ideas and<br>artificial imagination.</p>{% if user.is_authenticated %}<button type="button" class="create-collection-link" data-new-collection>+ CREATE COLLECTION</button>{% else %}<a href="{% url 'login' %}?next=/">LOG IN TO CREATE COLLECTIONS</a>{% endif %}</div>
+<div class="view-toolbar"><span>SELECTED WORKS / CHOOSE YOUR PERSPECTIVE</span><div class="view-options" role="group" aria-label="Project arrangement"><button type="button" data-view="globe" aria-pressed="true">Globe</button><button type="button" data-view="mosaic" aria-pressed="false">Mosaic</button><button type="button" data-view="map" aria-pressed="false">Maps</button></div><button type="button" class="filter-toggle" popovertarget="atlas-filter-panel" aria-label="Search and filter projects" title="Search and filters"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>{% if has_filters %}<span class="filter-active" aria-label="Filters active"></span>{% endif %}</button>{% if can_delete_projects %}<button type="button" class="delete-mode-toggle" aria-pressed="false">Delete projects</button>{% endif %}<button type="button" class="orbit-pause" hidden aria-pressed="false">Pause motion</button></div>
+<div class="map-toolbar" hidden><label for="atlas-map-kind">MAPS</label><select id="atlas-map-kind"><option value="type">Project type</option><option value="color">Color</option><option value="year">Year</option><option value="field">Creative field</option><option value="format">Format</option><option value="orbit">3D Orbit</option></select><p id="map-description"></p><div class="map-camera-controls" role="group" aria-label="Map navigation"><button type="button" data-map-camera="out" aria-label="Zoom out of map">−</button><output aria-label="Map zoom">100%</output><button type="button" data-map-camera="in" aria-label="Zoom into map">+</button><button type="button" data-map-camera="fit">Fit map</button></div><nav class="map-legend" aria-label="Focus a category"></nav></div>
+{{ map_data|json_script:"atlas-map-data" }}
+<div id="atlas-filter-panel" popover aria-labelledby="filter-panel-title"><div class="filter-panel-heading"><h2 id="filter-panel-title">EXPLORE THE ATLAS</h2><button type="button" popovertarget="atlas-filter-panel" popovertargetaction="hide" aria-label="Close filters">×</button></div><form class="atlas-filters" method="get" action="{% url 'home' %}" aria-label="Filter and sort projects">
+<div class="filter-field filter-wide"><label for="atlas-search">PROJECT NAME</label><input id="atlas-search" type="search" name="q" value="{{ search }}" placeholder="Search by project name…" maxlength="200"></div>
+<div class="filter-field filter-wide"><label for="atlas-creator">CREATOR</label><select id="atlas-creator" name="creator"><option value="">All creators</option>{% for value, label in creator_choices %}<option value="{{ value }}" {% if creator == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+<div class="filter-field"><label for="atlas-sort">SORT BY</label><select name="sort" id="atlas-sort"><option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Default order</option><option value="name_asc" {% if sort == 'name_asc' %}selected{% endif %}>A–Z</option><option value="name_desc" {% if sort == 'name_desc' %}selected{% endif %}>Z–A</option></select></div>
+<div class="filter-actions"><button type="submit">APPLY FILTERS</button><a href="{% url 'home' %}">RESET</a><span aria-live="polite">{{ project_count }} project{{ project_count|pluralize }}</span></div>
+</form></div>
+{% if not project_count %}<p class="filter-empty" role="status">{% if has_filters %}No projects match your filters. Try another search or reset the filters.{% else %}New projects are on their way. Explore the open spaces.{% endif %}</p>{% endif %}
+<p class="view-status" aria-live="polite">Scroll to zoom · Drag to explore · Select a project for details.</p>
+<div class="orbit-controls" role="group" aria-label="Rotate through projects" hidden><button type="button" data-orbit-step="-1" aria-label="Rotate to previous project">←</button><span>ROTATE TO DISCOVER</span><output data-orbit-position aria-label="Project at the centre">1 / {{ project_count }}</output><button type="button" data-orbit-step="1" aria-label="Rotate to next project">→</button></div>
+<div class="scene-window" tabindex="0" role="region" aria-label="Explore the globe. Use plus and minus to zoom, arrow keys to move, and zero to reset."><div class="project-globe" data-layout="globe" aria-label="Interactive project gallery">
 
-<body>
-    <h1>AI ATLAS</h1>
-    <p>An atlas of creativity and artificial intelligence.</p>
-    <a href="/archive/" class="btn">Explorar projetos →</a>
+{% for tile in tiles %}
+{% if tile.project %}
+<a href="{% url 'project_detail' tile.project.pk %}" class="globe-tile tone-{{ tile.tone }} has-project" style="--x:{{ tile.x }}%;--y:{{ tile.y }}%;--size:{{ tile.size }}%;--float-delay:-{{ tile.number }}s;--float-duration:{{ tile.tone|add:6 }}s" data-project="project-{{ tile.project.pk }}" data-project-pk="{{ tile.project.pk }}" {% if can_delete_projects %}data-delete-url="{% url 'project_delete' tile.project.pk %}"{% endif %} aria-label="View {{ tile.project.title }} by {{ tile.project.creator_credit }}">
+{% if tile.project.thumbnail_url %}<img src="{{ tile.project.thumbnail_url }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">{% else %}<span class="tile-symbol" aria-hidden="true">✳</span>{% endif %}
+{% if tile.project.preview_video_url %}<video class="tile-video" data-preview-video data-src="{{ tile.project.preview_video_url }}" muted loop playsinline preload="none" aria-hidden="true"></video><span class="video-badge" aria-hidden="true">▶</span>{% endif %}
+<span class="tile-caption"><strong class="tile-title">{{ tile.project.title }}</strong><small>@{{ tile.project.instagram_username|default:tile.project.creator_credit }}</small><small class="tile-description">{{ tile.project.description|truncatewords:12 }}</small></span></a>
+{% else %}
+<span class="globe-tile placeholder tone-{{ tile.tone }}" style="--x:{{ tile.x }}%;--y:{{ tile.y }}%;--size:{{ tile.size }}%" aria-hidden="true"><span class="tile-number">{{ tile.number }}</span></span>
+{% endif %}{% endfor %}
+</div>
+</div><div class="zoom-controls" role="group" aria-label="Globe zoom"><button type="button" data-zoom="out" aria-label="Zoom out">−</button><input id="zoom-range" type="range" min="0" max="100" value="0" step="1" aria-label="Globe zoom, from 1 to 40 times"><output id="zoom-level">100%</output><button type="button" data-zoom="in" aria-label="Zoom into globe">+</button><button type="button" data-zoom="explore">Explore closer</button><button type="button" data-zoom="reset">Fit globe</button></div><div class="globe-navigation" role="group" aria-label="Move around the globe"><button type="button" data-jump="previous">Previous project</button><button type="button" data-jump="next">Next project</button><div class="pan-controls"><button type="button" data-pan="left" aria-label="Move view left">←</button><button type="button" data-pan="up" aria-label="Move view up">↑</button><button type="button" data-pan="down" aria-label="Move view down">↓</button><button type="button" data-pan="right" aria-label="Move view right">→</button></div></div><div class="globe-coordinate" aria-hidden="true">CREATIVITY HAS NO COORDINATES. ↗</div>
+</section>
+<div class="home-bottom"><span>HOVER TO DISCOVER · CLICK TO EXPLORE</span><p>Art, technology and everything in between.</p>{% if user.is_authenticated %}<button type="button" data-new-collection>+ CREATE COLLECTION</button>{% else %}<a href="{% url 'login' %}?next=/">LOG IN TO SAVE PROJECTS</a>{% endif %}</div>
+{% if can_delete_projects %}<form class="bulk-selection-bar" method="post" action="{% url 'projects_bulk_delete' %}" hidden>{% csrf_token %}<strong data-selected-count>0 selected</strong><div data-selected-inputs></div><button type="button" data-select-shown>Select all shown</button><button type="button" data-clear-selection>Clear</button><button type="submit" data-review-selection disabled>Review deletion</button></form>{% endif %}
+</main>
+
+{% if user.is_authenticated %}
+<dialog id="new-collection" class="project-dialog collection-dialog" aria-labelledby="new-collection-title">
+<form method="dialog"><button class="dialog-close" aria-label="Close collection form">CLOSE ×</button></form>
+<div class="dialog-copy"><span>YOUR PERSONAL ATLAS</span><h2 id="new-collection-title">NEW COLLECTION</h2><form class="collection-create-form" method="post" action="{% url 'create_collection' %}">{% csrf_token %}<input type="hidden" name="from_atlas" value="1"><input type="hidden" name="project_id" id="new-collection-project" value="">{{ collection_form.as_p }}<button type="submit">CREATE COLLECTION</button></form></div>
+</dialog>
+{% endif %}
+{% if messages %}<div class="atlas-messages" role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
+<footer><span>AI ATLAS © {% now 'Y' %}</span><span>AI WITH VISION.</span></footer>
 </body>
-
 </html>
+

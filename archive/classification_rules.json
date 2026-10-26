@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "project_type": {
+    "default": "art",
+    "rules": [
+      {"value": "experiment", "pattern": "\\b(concept|speculative|fictional campaign|uncommissioned|independent|experiment|research|r&d)\\b|not commissioned"},
+      {"value": "brand", "pattern": "\\b(campaign|commissioned|client|advertising|commercial)\\b|visuals for|brand project"}
+    ]
+  },
+  "creative_field": {
+    "default": "art",
+    "category_map": {"AI": "art", "CGI": "3d", "FASHION": "fashion", "FILM": "film", "DESIGN": "design"},
+    "title_rules": [
+      {"value": "architecture", "pattern": "\\b(architecture|architectural|interiors?)\\b"},
+      {"value": "abstract", "category": "AI", "pattern": "\\babstract\\b"}
+    ]
+  },
+  "media_format": {
+    "default": "image",
+    "video_categories": ["FILM"],
+    "series_pattern": "\\bseries\\b|album of unforgetting|collection of (images|portraits|photographs)"
+  }
+}

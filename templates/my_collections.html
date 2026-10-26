@@ -24,6 +24,7 @@
 </section>
 
 <main>
+{% if messages %}<div role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
     <div class="section-header">
         <h2>YOUR COLLECTIONS</h2>
         <span>{{ collections.count }} COLLECTIONS</span>
@@ -31,6 +32,7 @@
 
     <div class="collection-grid">
         {% for collection in collections %}
+        <article class="collection-entry">
         <a href="{% url 'collection_detail' collection.pk %}"
            class="collection-card">
 
@@ -39,7 +41,7 @@
                 <img src="{{ collection.cover_image }}"
                      alt="{{ collection.title }}">
                 {% else %}
-                <span class="placeholder">AI ATLAS®</span>
+                <span class="placeholder">AI ATLAS{% include "brand_globe.html" %}</span>
                 {% endif %}
             </div>
 
@@ -51,6 +53,8 @@
             <p>{{ collection.description|truncatewords:15 }}</p>
             <small>{{ collection.projects.count }} PROJECTS</small>
         </a>
+        <a class="collection-trash" href="{% url 'delete_collection' collection.pk %}" aria-label="Delete collection {{ collection.title }}" title="Delete collection">{% include 'trash_icon.html' %}</a>
+        </article>
         {% empty %}
         <p>You haven't created any collections yet.</p>
         {% endfor %}

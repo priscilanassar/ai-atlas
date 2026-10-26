@@ -9,6 +9,7 @@
     <title>{{ collection.title }} — AI ATLAS</title>
 
     <link rel="stylesheet" href="{% static 'css/collection.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 </head>
 <body>
     {% include 'navbar.html' %}
@@ -19,6 +20,7 @@
     <h1 class="detail-title">{{ collection.title }}</h1>
     <p>{{ collection.description }}</p>
     <span>CURATED BY {{ collection.owner.username }}</span>
+    <a class="collection-delete-link" href="{% url 'delete_collection' collection.pk %}">{% include 'trash_icon.html' %} DELETE COLLECTION</a>
 </section>
 
 <main>
@@ -29,19 +31,19 @@
 
     <div class="collection-grid">
         {% for project in projects %}
-        <article class="collection-card">
+        <a class="collection-card" href="{% url 'project_detail' project.pk %}">
             <div class="collection-image">
-                {% if project.image %}
-                <img src="{{ project.image }}"
+                {% if project.thumbnail_url %}
+                <img src="{{ project.thumbnail_url }}"
                      alt="{{ project.title }}"
-                     loading="lazy">
+                     loading="lazy" decoding="async">
                 {% endif %}
             </div>
             <div class="collection-info">
                 <h3>{{ project.title }}</h3>
             </div>
-            <p>{{ project.artist }} — {{ project.year }}</p>
-        </article>
+            <p>{{ project.creator_credit }} — {{ project.year }}</p>
+        </a>
         {% empty %}
         <p>No projects in this collection yet.</p>
         {% endfor %}
@@ -50,7 +52,7 @@
 
 <footer>
     <span>AI ATLAS © 2026</span>
-    <a href="{% url 'collection' %}">← ALL COLLECTIONS</a>
+    <a href="{% url 'my_collections' %}">← MY COLLECTIONS</a>
 </footer>
 
 </body>

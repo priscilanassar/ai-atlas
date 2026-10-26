@@ -1,0 +1,83 @@
+/* Mobile uses document flow so controls never compete with the artwork. */
+@media (max-width: 768px) {
+    .navbar { position: relative; inset: auto; padding: 14px 12px 6px; gap: 8px; background: #e4ff54; }
+    .navbar .logo { display: inline-flex; align-items: center; min-height: 44px; }
+    .nav-links { width: 100%; gap: 0 10px; }
+    .nav-links a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 4px; font-size: 11px; }
+    .navbar .logout-btn { min-height: 44px; }
+    .atlas-home, body[data-view="mosaic"] .atlas-home { padding: 0; }
+    .home-heading { position: static; padding: 14px 4% 10px; font-size: 8px; }
+    .globe-stage, body[data-view="mosaic"] .globe-stage {
+        display: flex; flex-direction: column; align-items: stretch;
+        height: auto; min-height: 0; max-width: none; padding: 0 4%;
+    }
+    .view-toolbar, body[data-view="mosaic"] .view-toolbar {
+        position: static; inset: auto; order: 0; display: grid; grid-template-columns: minmax(0, 1fr) 44px;
+        align-self: stretch; align-items: center; gap: 8px; max-width: none; margin: 0; padding: 0;
+    }
+    .view-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+    .view-options button, .orbit-pause, .delete-mode-toggle { min-height: 44px; padding: 8px 10px; font-size: 12px; }
+    .filter-toggle { width: 44px; height: 44px; }
+    .orbit-pause, .delete-mode-toggle { grid-column: 1 / -1; justify-self: start; }
+    .home-copy, body[data-view="orbit"] .home-copy, body[data-view="mosaic"] .home-copy {
+        position: static; inset: auto; order: 1; display: block; margin: 22px 0 12px; padding: 0;
+    }
+    .home-copy h1, body[data-view="orbit"] .home-copy h1 { font-size: clamp(36px, 11vw, 76px); }
+    .home-copy p { font-size: 13px; line-height: 1.5; margin: 14px 0 0; }
+    .home-copy p br { display: none; }
+    /* The same collection action stays available below the gallery. */
+    .home-copy>a, .home-copy>.create-collection-link { display: none; }
+    .scene-window, body[data-view="mosaic"] .scene-window {
+        position: relative; inset: auto; order: 2; width: 100%; height: clamp(290px, 94vw, 600px); margin: 0;
+    }
+    body[data-view="globe"] .scene-window { touch-action: pan-y; }
+    body[data-view="globe"] .scene-window.is-zoomed { touch-action: none; }
+    .project-globe[data-layout="globe"] { width: min(110%, 660px); margin: 0; }
+    body[data-view="orbit"] .scene-window { height: clamp(280px, 74vw, 460px); }
+    .project-globe[data-layout="orbit"] { inset: 0; width: 100%; height: 100%; }
+    body[data-view="mosaic"] .scene-window { height: auto; overflow: visible; margin-top: 12px; }
+    body[data-view="mosaic"] .project-globe { position: relative; inset: auto; width: 100%; margin: 0 0 20px; }
+    .project-globe[data-layout="mosaic"] .tile-caption { font-size: 14px; line-height: 1.4; }
+    .project-globe[data-layout="mosaic"] .tile-title { font-size: 14px; max-height: 35px; }
+    .project-globe[data-layout="mosaic"] .tile-caption small { font-size: 12px; }
+    .project-globe[data-layout="mosaic"] .tile-caption .tile-description { font-size: 11px; }
+    .zoom-controls {
+        position: static; inset: auto; order: 3; display: grid; grid-template-columns: 44px minmax(0, 1fr) 54px 44px;
+        width: 100%; max-width: none; gap: 0; margin: 12px 0 0; padding: 4px;
+    }
+    .zoom-controls button { min-height: 44px; padding: 10px; font-size: 12px; }
+    .zoom-controls input[type="range"] { width: 100%; min-width: 0; height: 44px; margin: 0; }
+    .zoom-controls output { font-size: 12px; }
+    .zoom-controls [data-zoom="explore"], .zoom-controls [data-zoom="reset"] { grid-column: span 2; border-top: 1px solid #1113; }
+    .globe-navigation { position: static; inset: auto; order: 4; display: grid; grid-template-columns: 1fr 1fr; max-width: none; gap: 8px; margin-top: 8px; }
+    .globe-navigation button { min-width: 44px; min-height: 44px; padding: 10px; font-size: 12px; }
+    .pan-controls { display: none; grid-column: 1 / -1; justify-content: center; gap: 8px; }
+    .globe-stage:has(.scene-window.is-zoomed) .pan-controls { display: flex; }
+    .globe-stage:has(.scene-window.is-close-up) .home-copy { opacity: 1; visibility: visible; }
+    .orbit-controls {
+        position: static; inset: auto; order: 3; transform: none; align-self: center;
+        width: min(100%, 400px); justify-content: space-between; gap: 8px; margin: 12px 0 0;
+    }
+    .orbit-controls button { width: 44px; height: 44px; flex-shrink: 0; }
+    .orbit-controls output { min-width: 58px; }
+    .view-status, body[data-view="globe"] .view-status, body[data-view="orbit"] .view-status, body[data-view="mosaic"] .view-status {
+        position: static; inset: auto; order: 5; max-width: none; margin: 14px 0 20px; font-size: 11px; line-height: 1.5;
+    }
+    .filter-empty, body[data-view="mosaic"] .filter-empty { position: static; inset: auto; order: 2; max-width: none; font-size: 13px; }
+    .home-bottom, body[data-view="mosaic"] .home-bottom { position: static; inset: auto; margin: 0 4%; padding: 8px 0; }
+    .home-bottom>span { display: none; }
+    .home-bottom a, .home-bottom button { display: inline-flex; align-items: center; min-height: 44px; font-size: 11px; }
+    #atlas-filter-panel { inset: 16px 4% auto; width: auto; max-height: calc(100dvh - 32px); padding: 16px; overscroll-behavior: contain; }
+    .filter-panel-heading { margin-bottom: 14px; }
+    .filter-panel-heading button { width: 44px; height: 44px; }
+    #atlas-filter-panel .filter-field label { font-size: 10px; }
+    #atlas-filter-panel .filter-field input, #atlas-filter-panel .filter-field select { min-height: 44px; font-size: 16px; }
+    .filter-actions { bottom: -16px; padding-bottom: 8px; }
+    #atlas-filter-panel .filter-actions button, #atlas-filter-panel .filter-actions a { min-height: 44px; font-size: 12px; }
+    .bulk-selection-bar { padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+    .bulk-selection-bar button { min-height: 44px; }
+}
+
+@media (max-width: 360px) {
+    #atlas-filter-panel .atlas-filters { grid-template-columns: minmax(0, 1fr); }
+}

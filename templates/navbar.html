@@ -1,21 +1,18 @@
 <header class="navbar">
-    <a href="{% url 'home' %}" class="logo">AI ATLAS®</a>
+    <a href="{% url 'home' %}" class="logo">AI ATLAS{% include "brand_globe.html" %}</a>
 
     <nav class="nav-links">
-        <a href="{% url 'archive' %}">ARCHIVE ↗</a>
-        <a href="{% url 'collection' %}">COLLECTIONS ↗</a>
-        <a href="/creative-dna/">CREATIVE DNA ↗</a>
+        <a href="{% url 'home' %}">ATLAS</a>
+        <a href="{% url 'my_collections' %}">MY COLLECTIONS</a>
 
         {% if user.is_authenticated %}
-        <a href="{% url 'my_collections' %}">MY COLLECTIONS ↗</a>
-
         <form method="POST" action="{% url 'logout' %}" class="logout-form">
             {% csrf_token %}
-            <button type="submit" class="logout-btn">LOGOUT ↗</button>
+            <button type="submit" class="logout-btn">LOGOUT</button>
         </form>
         {% else %}
-        <a href="{% url 'login' %}">LOGIN ↗</a>
-        <a href="{% url 'signup' %}">SIGN UP ↗</a>
+        <a href="{% url 'login' %}">LOGIN</a>
+        <a href="{% url 'signup' %}">SIGN UP</a>
         {% endif %}
     </nav>
 </header>

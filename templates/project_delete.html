@@ -1,0 +1,14 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Delete project — AI ATLAS</title><link rel="stylesheet" href="{% static 'css/navbar.css' %}"><link rel="stylesheet" href="{% static 'css/project_detail.css' %}?v=20261025-18"></head>
+<body class="project-delete-page">
+{% include 'navbar.html' %}
+<main class="delete-confirmation">
+<a class="back-link" href="{% url 'home' %}">BACK TO THE ATLAS</a>
+<section class="delete-confirmation-panel" aria-labelledby="delete-title">
+<div>{% if project.thumbnail_url %}<img class="delete-preview" src="{{ project.thumbnail_url }}" alt="{{ project.title }}" referrerpolicy="no-referrer">{% endif %}</div>
+<div><p class="eyebrow">ADMIN / PROJECT MANAGEMENT</p><h1 id="delete-title">Delete this project?</h1><h2>{{ project.title }}</h2><p>{{ project.artist }}</p><p>This permanently removes the project from the Atlas and from every collection where it was saved. This cannot be undone.</p>
+<form method="post" action="{% url 'project_delete' project.pk %}" class="delete-confirmation-actions">{% csrf_token %}<a href="{% url 'project_detail' project.pk %}">CANCEL</a><button type="submit">DELETE PERMANENTLY</button></form>
+</div></section></main>
+</body></html>

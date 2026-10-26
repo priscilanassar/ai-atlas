@@ -22,6 +22,7 @@
 </section>
 
 <main>
+{% if messages %}<div role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
     <div class="section-header">
         <h2>EXPLORE COLLECTIONS</h2>
         <span>{{ collections.count }} COLLECTIONS</span>
@@ -29,6 +30,7 @@
 
     <div class="collection-grid">
         {% for collection in collections %}
+        <article class="collection-entry">
         <a href="{% url 'collection_detail' collection.pk %}"
            class="collection-card">
 
@@ -38,7 +40,7 @@
                      alt="{{ collection.title }}"
                      loading="lazy">
                 {% else %}
-                <span class="placeholder">AI ATLAS®</span>
+                <span class="placeholder">AI ATLAS{% include "brand_globe.html" %}</span>
                 {% endif %}
             </div>
 
@@ -50,6 +52,8 @@
             <p>{{ collection.description|truncatewords:12 }}</p>
             <small>{{ collection.projects.count }} PROJECTS</small>
         </a>
+        <a class="collection-trash" href="{% url 'delete_collection' collection.pk %}" aria-label="Delete collection {{ collection.title }}" title="Delete collection">{% include 'trash_icon.html' %}</a>
+        </article>
         {% empty %}
         <p>No collections yet. Create your first one in the admin panel.</p>
         {% endfor %}

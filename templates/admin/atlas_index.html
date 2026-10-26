@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+{% block bodyclass %}{{ block.super }} atlas-dashboard{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content_title %}{% endblock %}
+{% block content %}
+<div class="atlas-layout">
+  <aside class="atlas-nav"><p class="eyebrow">WORKSPACE</p><a class="active" href="{% url 'admin:index' %}">↗ Overview</a>{% for app in app_list %}{% for model in app.models %}{% if model.admin_url %}<a href="{{ model.admin_url }}">{{ model.name }} <span>↗</span></a>{% endif %}{% endfor %}{% endfor %}</aside>
+  <main class="atlas-main">
+    <div class="atlas-intro"><div><p class="eyebrow">AI ATLAS / ADMINISTRATION</p><h1>Admin<br>space</h1><p>AI WITH VISION.</p></div>{% if can_add_project %}<a class="atlas-button" href="{% url 'admin:archive_project_add' %}">+ Add project</a>{% endif %}</div>
+    <section class="atlas-stats" aria-label="Archive overview"><article><span>01 / PROJECTS</span><strong>{{ project_count|default_if_none:"—" }}</strong><p>Projects in the archive</p></article><article><span>02 / COLLECTIONS</span><strong>{{ collection_count|default_if_none:"—" }}</strong><p>Curated collections</p></article><article><span>03 / ARTISTS</span><strong>{{ artist_count|default_if_none:"—" }}</strong><p>Creative perspectives</p></article></section>
+    {% if can_view_projects %}<section class="atlas-projects"><div class="section-heading"><div><p class="eyebrow">THE ARCHIVE IN MOTION</p><h2>Latest projects</h2></div><a href="{% url 'admin:archive_project_changelist' %}">View all ↗</a></div><div class="atlas-grid">{% for project in recent_projects %}<a class="project-card" href="{% url 'admin:archive_project_change' project.pk %}"><div class="project-art">{% if project.image %}<img src="{{ project.image }}" alt="{{ project.title }}" loading="lazy" referrerpolicy="no-referrer">{% else %}<span class="art-placeholder" aria-hidden="true">✳</span>{% endif %}<span class="project-category">{{ project.get_category_display }}</span></div><div class="project-info"><h3>{{ project.title }}</h3><span>↗</span><p>{{ project.artist }} · {{ project.year }}</p></div></a>{% empty %}<div class="atlas-empty"><span>✳</span><h3>Your next universe starts here.</h3><p>Add your first project to start building the archive.</p>{% if can_add_project %}<a class="atlas-button" href="{% url 'admin:archive_project_add' %}">+ Create first project</a>{% endif %}</div>{% endfor %}</div></section>{% endif %}
+    <section class="atlas-manage"><div class="section-heading"><h2>Manage workspace</h2></div>{% for app in app_list %}<div class="manage-group"><p class="eyebrow">{{ app.name }}</p>{% for model in app.models %}<div class="manage-row">{% if model.admin_url %}<a href="{{ model.admin_url }}">{{ model.name }} — Manage / delete ↗</a>{% else %}<span>{{ model.name }}</span>{% endif %}{% if model.add_url %}<a class="add-link" href="{{ model.add_url }}">+ Add</a>{% endif %}</div>{% endfor %}</div>{% empty %}<p>You do not have permission to manage the archive yet.</p>{% endfor %}</section>
+  </main>
+</div>
+{% endblock %}
+{% block sidebar %}{% endblock %}

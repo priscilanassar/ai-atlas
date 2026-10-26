@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ project.title }} — AI ATLAS</title><link rel="stylesheet" href="{% static 'css/navbar.css' %}"><link rel="stylesheet" href="{% static 'css/project_detail.css' %}?v=20261025-20"><script src="{% static 'js/project_selection.js' %}?v=20261025-20" defer></script><script src="{% static 'js/project_videos.js' %}?v=20261026-7" defer></script></head>
+<body>
+{% include 'navbar.html' %}
+<main>
+<a class="back-link" href="{% url 'home' %}">BACK TO THE ATLAS</a>
+<header class="project-heading"><div><p class="eyebrow">{{ project.get_category_display }}{% if project.title_is_editorial %} / CURATORIAL TITLE{% endif %}</p><h1>{{ project.title }}</h1></div><div class="creator"><p>{{ project.creator_credit }}</p>{% if project.instagram_profile_url %}<a href="{{ project.instagram_profile_url }}" target="_blank" rel="noopener noreferrer">@{{ project.instagram_username }}</a>{% endif %}</div></header>
+<div class="project-layout">
+<section class="project-visuals" aria-label="Project media">
+{% if project.primary_video %}<figure class="hero-image"><video controls playsinline preload="metadata" poster="{{ project.cover_url }}" data-project-video data-autoplay muted><source src="{{ project.primary_video.playback_url|default:project.primary_video.url }}" type="video/mp4"></video><figcaption><button type="button" class="project-video-toggle" data-toggle-project-video>Play video</button> PROJECT VIDEO{% if project.source_url %} · <a href="{{ project.source_url }}" target="_blank" rel="noopener noreferrer">View original</a>{% endif %}</figcaption></figure>{% elif project.cover_url %}<figure class="hero-image"><img src="{{ project.cover_url }}" alt="{{ project.title }}" referrerpolicy="no-referrer"></figure>{% else %}<div class="image-placeholder">AI ATLAS{% include 'brand_globe.html' %}</div>{% endif %}
+{% for media in project.media_items %}{% if media.kind == 'video' %}{% if media != project.primary_video %}<figure><video data-project-video controls preload="none" playsinline poster="{{ project.cover_url }}" referrerpolicy="no-referrer"><source src="{{ media.playback_url|default:media.url }}" type="video/mp4">Watch this video on Instagram.</video><figcaption>VIDEO {{ forloop.counter }} · <a href="{{ project.source_url }}" target="_blank" rel="noopener noreferrer">Watch original on Instagram</a></figcaption></figure>{% endif %}{% elif not media.is_cover %}<figure><img src="{{ media.url }}" alt="{{ project.title }} — image {{ forloop.counter }}" loading="lazy" decoding="async" referrerpolicy="no-referrer"></figure>{% endif %}{% endfor %}
+</section>
+<aside class="project-information">
+{% if can_delete_projects %}<a class="delete-project-button" href="{% url 'project_delete' project.pk %}">DELETE PROJECT</a> <button type="button" class="delete-project-button" data-open-project-picker>DELETE MULTIPLE PROJECTS</button>{% endif %}
+<section><p class="eyebrow">ABOUT THE PROJECT</p><div class="description">{{ project.description|linebreaks }}</div></section>
+{% if project.country %}<p class="project-country">MADE IN · {{ project.country }}</p>{% endif %}
+<dl>{% if project.published_at %}<dt>INSTAGRAM PUBLICATION</dt><dd>{{ project.published_at|date:'F j, Y' }}</dd>{% elif project.project_date %}<dt>PROJECT DATE</dt><dd>{{ project.project_date|date:'F j, Y' }}</dd>{% else %}<dt>YEAR</dt><dd>{{ project.year }}</dd>{% endif %}{% if project.tools %}<dt>TOOLS</dt><dd>{{ project.tools }}</dd>{% endif %}{% if project.country or project.city %}<dt>LOCATION</dt><dd>{{ project.city }}{% if project.city and project.country %}, {% endif %}{{ project.country }}</dd>{% endif %}{% if project.ai_disclosure %}<dt>AI PROCESS</dt><dd>{{ project.ai_disclosure }}</dd>{% endif %}</dl>
+{% if project.source_url %}<a class="primary-button" href="{{ project.source_url }}" target="_blank" rel="noopener noreferrer">VIEW ORIGINAL ON INSTAGRAM</a>{% endif %}
+{% if user.is_authenticated %}
+{% if collections %}<form class="collection-form" method="post" action="{% url 'save_project' project.pk %}">{% csrf_token %}<label for="collection_id">SAVE TO YOUR COLLECTION</label><select id="collection_id" name="collection_id" required>{% for collection in collections %}<option value="{{ collection.pk }}">{{ collection.title }}</option>{% endfor %}</select><button type="submit">SAVE PROJECT</button></form>{% endif %}
+<details class="create-collection"><summary>+ NEW COLLECTION WITH THIS PROJECT</summary><form class="collection-form" method="post" action="{% url 'create_collection' %}">{% csrf_token %}<input type="hidden" name="project_id" value="{{ project.pk }}">{{ collection_form.as_p }}<button type="submit">CREATE COLLECTION</button></form></details>
+{% else %}<a class="secondary-button" href="{% url 'login' %}?next={{ request.path|urlencode }}">LOG IN TO SAVE THIS PROJECT</a>{% endif %}
+</aside>
+</div>
+{% if related_projects %}<section class="related"><p class="eyebrow">MORE TO EXPLORE</p><div class="related-grid">{% for related in related_projects %}<a href="{% url 'project_detail' related.pk %}">{% if related.thumbnail_url %}<img src="{{ related.thumbnail_url }}" alt="{{ related.title }}" loading="lazy" decoding="async" referrerpolicy="no-referrer">{% endif %}<h2>{{ related.title }}</h2><p>{{ related.artist }}</p></a>{% endfor %}</div></section>{% endif %}
+</main>
+<footer><a href="{% url 'home' %}">AI ATLAS{% include 'brand_globe.html' %}</a><span>A CREATIVE ATLAS OF AI</span></footer>
+{% if can_delete_projects %}{% include 'project_bulk_picker.html' %}{% endif %}</body></html>
